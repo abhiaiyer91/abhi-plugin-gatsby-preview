@@ -13,13 +13,22 @@ function PreviewProvider({ children }) {
     });
 
     socket.on("status", (data) => {
-      console.log(`Received data for reload`, data);
+      console.log(`Received data for status msg`, data);
 
-      if (data && data.event) {
+      let event;
+      try {
+        const jsonData = JSON.parse(data);
+
+        event = jsonData && jsonData.event;
+      } catch (e) {
+        console.error(e);
+      }
+
+      if (event) {
         showStatusBar(true);
       }
 
-      if (data && data.event === "SUCCESS") {
+      if (event === "SUCCESS") {
         setMessage("You Gatsby Preview is reloading...");
         setTimeout(() => {
           window.location.reload();
