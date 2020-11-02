@@ -27,7 +27,7 @@ function PreviewProvider({ children }) {
       const event = jsonData && jsonData.event;
 
       if (event) {
-        showStatusBar(true);
+        setShowStatus(true);
       }
 
       if (event === "SUCCESS") {
