@@ -2,31 +2,33 @@ const React = require("react");
 const io = require("socket.io-client");
 
 function PreviewProvider({ children }) {
-  const [showReloadBar, setShowReloadBar] = React.useState(false);
-
-  const [showInProgressBar, setInProgess] = React.useState(false);
+  const [showStatusBar, setShowStatus] = React.useState(false);
+  const [message, setMessage] = React.useState("");
 
   React.useEffect(() => {
     const socket = io();
 
     socket.on("connect", () => {
-      console.log("Connected to cloud runner");
+      console.log("Connected to Gatsby Preview");
     });
 
-    socket.on("reload", (data) => {
+    socket.on("status", (data) => {
       console.log(`Received data for reload`, data);
-      setInProgess(false);
-      setShowReloadBar(true);
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    });
+      if (data && data.event) {
+        showStatusBar(true);
+      }
 
-    socket.on("building", (data) => {
-      console.log(`Received data for building`, data);
-      setInProgess(true);
-      setShowReloadBar(false);
+      if (data && data.event === "SUCCESS") {
+        setMessage("You Gatsby Preview is reloading...");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        setMessage(
+          "You Gatsby Preview is building, the page will reload when complete..."
+        );
+      }
     });
 
     return () => {
@@ -36,7 +38,7 @@ function PreviewProvider({ children }) {
 
   return (
     <>
-      {showReloadBar && (
+      {showStatusBar && (
         <div
           style={{
             position: `fixed`,
@@ -48,23 +50,7 @@ function PreviewProvider({ children }) {
             textAlign: `center`,
           }}
         >
-          Your Preview is reloading...
-        </div>
-      )}
-
-      {showInProgressBar && (
-        <div
-          style={{
-            position: `fixed`,
-            width: `100%`,
-            top: 0,
-            left: 0,
-            backgroundColor: `purple`,
-            color: `white`,
-            textAlign: `center`,
-          }}
-        >
-          Your Preview is rebuilding...
+          {message}
         </div>
       )}
 
