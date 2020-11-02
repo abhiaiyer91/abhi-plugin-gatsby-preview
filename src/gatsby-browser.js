@@ -13,7 +13,7 @@ function PreviewProvider({ children }) {
     });
 
     socket.on("status", (data) => {
-      console.log(`Received data for status msg`, data);
+      console.log(`Received data for status msg`, data, typeof data);
 
       const event = data && data.event;
 
