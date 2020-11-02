@@ -15,7 +15,16 @@ function PreviewProvider({ children }) {
     socket.on("status", (data) => {
       console.log(`Received data for status msg`, data, typeof data);
 
-      const event = data && data.event;
+      let jsonData;
+      try {
+        jsonData = JSON.parse(data);
+      } catch (e) {
+        console.error(e);
+      }
+
+      console.log(jsonData);
+
+      const event = jsonData && datjsonDataa.event;
 
       if (event) {
         showStatusBar(true);
