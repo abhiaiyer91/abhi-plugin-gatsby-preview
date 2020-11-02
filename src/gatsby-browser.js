@@ -24,7 +24,7 @@ function PreviewProvider({ children }) {
 
       console.log(jsonData);
 
-      const event = jsonData && datjsonDataa.event;
+      const event = jsonData && jsonData.event;
 
       if (event) {
         showStatusBar(true);
